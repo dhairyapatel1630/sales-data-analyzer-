@@ -1,0 +1,85 @@
+import csv
+
+# Function to create a sample sales CSV file
+def create_csv():
+    with open("sales.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+
+        writer.writerow(["Product", "Quantity", "Price"])
+
+        writer.writerow(["Laptop", 5, 50000])
+        writer.writerow(["Mobile", 10, 15000])
+        writer.writerow(["Headphones", 20, 1000])
+        writer.writerow(["Keyboard", 15, 800])
+        writer.writerow(["Mouse", 25, 500])
+
+
+# Function to analyze sales data
+def analyze_sales():
+    sales_data = {}
+    total_sales = 0
+
+    with open("sales.csv", "r") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            product = row["Product"]
+            quantity = int(row["Quantity"])
+            price = float(row["Price"])
+
+            revenue = quantity * price
+
+            sales_data[product] = {
+                "Quantity": quantity,
+                "Price": price,
+                "Revenue": revenue
+            }
+
+            total_sales += revenue
+
+    return sales_data, total_sales
+
+
+# Function to display sales report
+def display_report(sales_data, total_sales):
+    print("\n========== SALES DATA ANALYZER ==========")
+
+    print("\nProduct-wise Sales Report:")
+
+    for product, details in sales_data.items():
+        print("\nProduct:", product)
+        print("Quantity Sold:", details["Quantity"])
+        print("Price:", details["Price"])
+        print("Revenue:", details["Revenue"])
+
+    print("\nTotal Sales Revenue: Rs.", total_sales)
+
+    # Find the best-selling product by quantity
+    best_product = max(
+        sales_data,
+        key=lambda product: sales_data[product]["Quantity"]
+    )
+
+    print("Best-Selling Product:", best_product)
+
+    # Find the product generating the highest revenue
+    highest_revenue_product = max(
+        sales_data,
+        key=lambda product: sales_data[product]["Revenue"]
+    )
+
+    print("Highest Revenue Product:", highest_revenue_product)
+
+
+# Main function
+def main():
+    create_csv()
+
+    sales_data, total_sales = analyze_sales()
+
+    display_report(sales_data, total_sales)
+
+
+# Run the project
+if __name__ == "__main__":
+    main()
